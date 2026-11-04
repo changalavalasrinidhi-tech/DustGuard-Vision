@@ -612,10 +612,7 @@ fig_map.add_trace(go.Scattermap(
         colorscale=[[0, "#10b981"], [0.45, "#f59e0b"], [1, "#ef4444"]],
         cmin=0.2,
         cmax=0.75,
-        colorbar=dict(
-            title=dict(text="<b>Aerosol AOD</b>", font=dict(color="#ffffff", size=13)),
-            tickfont=dict(color="#ffffff")
-        ),
+        showscale=False,
         opacity=0.92
     ),
     text=node_tags,
@@ -626,9 +623,10 @@ fig_map.add_trace(go.Scattermap(
     name="AOD Stations"
 ))
 
-# Full pan & drag config with cursor tracking and uirevision keying
+# Clean layout: remove overlapping legends/colorbars for a pristine view
 fig_map.update_layout(
-    uirevision=f"{target_lat}_{target_lon}_{chosen_style}", # Updates center when city changes, keeps pan state otherwise
+    showlegend=False,
+    uirevision=f"{target_lat}_{target_lon}_{chosen_style}", # Updates center when city changes
     dragmode="pan",  # Makes the map directly draggable and movable with cursor
     map=dict(
         style=chosen_style,
@@ -644,7 +642,7 @@ fig_map.update_layout(
     )
 )
 
-# Render Full-Width Map with smooth scroll zoom and movable cursor controls
+# Render Full-Width Map with smooth scroll zoom
 st.plotly_chart(
     fig_map, 
     use_container_width=True, 
@@ -654,6 +652,15 @@ st.plotly_chart(
         "displayModeBar": False
     }
 )
+
+st.markdown("""
+<div style="display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-top: -6px; margin-bottom: 12px; font-size: 0.82rem; color: #cbd5e1;">
+    <span><span style="color: #ef4444; font-weight: bold;">●</span> Site Core (AOD 0.68)</span>
+    <span><span style="color: #f59e0b; font-weight: bold;">●</span> Plume Dispersion (AOD 0.49–0.54)</span>
+    <span><span style="color: #10b981; font-weight: bold;">●</span> Clean Reference (AOD 0.34)</span>
+    <span><span style="color: #38bdf8; font-weight: bold;">━</span> Wind Vector (14 km/h)</span>
+</div>
+""", unsafe_allow_html=True)
 
 # Municipal Audit & Inspection Records Section
 st.markdown("---")
